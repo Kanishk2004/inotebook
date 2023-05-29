@@ -5,10 +5,11 @@ require("dotenv").config();
 
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
-
+  let success = false;
   // checking for the values from req.body
   if (!name || !email || !password) {
     return res.json({
+      success,
       error: "Name, email and password is required!",
     });
   }
@@ -18,6 +19,7 @@ exports.signup = async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
     if (user) {
       return res.status(400).json({
+        success,
         error: `Can't signup, user with this email already exists!`,
       });
     }
@@ -44,15 +46,17 @@ exports.signup = async (req, res) => {
   }
 };
 
-
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+
+  let success = false;
 
   try {
     // checking if the user already exists
     let user = await User.findOne({ email: email });
     if (!user) {
       return res.status(400).json({
+        success,
         error: `Can't login, credentials doesn't match!`,
       });
     }
@@ -61,6 +65,7 @@ exports.login = async (req, res) => {
     const comparePassword = bcrypt.compareSync(password, user.password);
     if (!comparePassword) {
       return res.status(400).json({
+        success,
         error: `Can't login, credentials doesn't match!`,
       });
     }
@@ -71,23 +76,25 @@ exports.login = async (req, res) => {
       },
     };
 
-    const authToken = jwt.sign(data, process.env.JWT_TOKEN, {expiresIn: process.env.JWT_EXPIRY });
-    res.json({ authToken });
+    const authToken = jwt.sign(data, process.env.JWT_TOKEN, {
+      expiresIn: process.env.JWT_EXPIRY,
+    });
 
+    res.json({ success: true, authToken });
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal server error!");
   }
 };
 
-
 exports.getLoggedInUser = async (req, res) => {
-    try {
-        let userId = req.user.id;
-        const user = await User.findById(userId).select("-password");
-        res.send(user);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal server error");
-    }
-}
+  try {
+    let userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+};
