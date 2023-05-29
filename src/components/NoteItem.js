@@ -12,6 +12,9 @@ const NoteItem = (props) => {
     <>
       <div className="col-md-4">
         <div className="card m-3 p-3">
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-secondary">
+        {note.tag}
+      </span>
           <h5 className="card-title">{note.title}</h5>
           <p className="card-text">{note.description}</p>
           <div className="icons">

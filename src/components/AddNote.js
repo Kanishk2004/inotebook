@@ -24,7 +24,7 @@ const AddNote = (props) => {
 
   return (
     <>
-      <div className="container mt-4">
+      <div className="container mt-5">
         <h2>Add a note</h2>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = (props) => {
 
@@ -22,8 +22,8 @@ const Login = (props) => {
     if (json.success) {
         // save auth token and redirect
         localStorage.setItem('token', json.authToken);
-        navigate("/");
         props.showAlert("Loggedin successfully!", "success");
+        navigate("/");
     } else {
         props.showAlert("Invalid details!", "danger");
     }
@@ -35,7 +35,8 @@ const Login = (props) => {
   };
 
   return (
-    <div>
+    <div className="mt-5">
+      <h2>Login to continue to iNotebook</h2>
       <form className="container" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -72,6 +73,7 @@ const Login = (props) => {
         >
           Submit
         </button>
+        <Link className="btn btn-outline-primary ms-2" to="/signup" role="button">Create Account</Link>
       </form>
     </div>
   );
